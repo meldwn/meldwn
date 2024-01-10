@@ -1,16 +1,44 @@
-### Hi there 👋
+```asm
+section .data
+    message db 72, 105, 32, 58, 51
 
-<!--
-**meldwn/meldwn** is a ✨ _special_ ✨ repository because its `README.md` (this file) appears on your GitHub profile.
+section .text
+    global _start
 
-Here are some ideas to get you started:
+_start:
+    mov eax, 4
+    mov ebx, 1
+    mov ecx, message
+    mov edx, 5
 
-- 🔭 I’m currently working on ...
-- 🌱 I’m currently learning ...
-- 👯 I’m looking to collaborate on ...
-- 🤔 I’m looking for help with ...
-- 💬 Ask me about ...
-- 📫 How to reach me: ...
-- 😄 Pronouns: ...
-- ⚡ Fun fact: ...
--->
+    xor esi, esi
+
+    encode_loop:
+        cmp esi, edx
+        jge done
+
+        mov al, byte [ecx + esi]
+        add al, 5
+
+        push eax
+        pop eax
+        dec al
+
+        mov dl, al
+        sub dl, 2
+        push edx
+
+        pop edx
+        sub dl, 1
+        mov al, dl
+
+        int 0x80
+
+        inc esi
+        jmp encode_loop
+
+    done:
+    mov eax, 1
+    xor ebx, ebx
+    int 0x80
+```
